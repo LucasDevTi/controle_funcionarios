@@ -9,6 +9,7 @@ class Middleware
     {
         if (!isset($_SESSION['user'])) {
             header('Location: /controle_funcionarios/login');
+            session_destroy();
             exit();
         }
     }

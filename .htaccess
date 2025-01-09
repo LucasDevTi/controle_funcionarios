@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Se o acesso for feito à raiz do projeto, redireciona para public/index.php
+RewriteRule ^$ public/ [L]
+
+# Para qualquer outra URL, redireciona para public/index.php com a URL preservada
+RewriteRule ^(.*)$ public/index.php/$1 [L]

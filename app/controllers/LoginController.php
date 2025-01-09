@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Core\Controller;
@@ -14,17 +15,21 @@ class LoginController extends Controller
     public function authenticate()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
+
+            $email = htmlspecialchars($_POST['email'], ENT_QUOTES);
             $password = md5($_POST['password']);
 
             $userModel = new User();
             $user = $userModel->getUserByEmailAndPassword($email, $password);
 
             if ($user) {
+                session_start();
                 $_SESSION['user'] = $user;
-                header('Location: /controle_funcionarios/home');
+                
+                header('Location: /controle_funcionarios/public/home');
             } else {
-                echo "Invalid credentials.";
+                
+                $this->view('login', ['error' => 'Credenciais inválidas.']);
             }
         }
     }
