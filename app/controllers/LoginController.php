@@ -23,7 +23,6 @@ class LoginController extends Controller
             $user = $userModel->getUserByEmailAndPassword($email, $password);
 
             if ($user) {
-                session_start();
                 $_SESSION['user'] = $user;
                 
                 header('Location: /controle_funcionarios/public/home');

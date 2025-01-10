@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use Middleware;
+use App\Core\Middleware;
 
 class App
 {
@@ -12,27 +12,34 @@ class App
 
     public function __construct()
     {
-        // session_start();
-
         $url = $this->parseUrl();
 
+        if (!empty($url[0]) && $url[0] !== 'login') {
+            Middleware::isAuth();
+        }
+
+        
+        if (!empty($url[0]) && $url[0] == 'login') {
+            Middleware::isLogin();
+        }
 
         if ($url[0] == 'controle_funcionarios') {
             $url = [];
+            Middleware::isLogin();
         }
 
-        /* Verifica a existência do controller, caso exista o arquivo o atributo recebe o nome do controller */
+        /* Verifica a existência do controller, caso exista o arquivo, o atributo recebe o nome do controller */
         if (isset($url[0]) && file_exists('../app/controllers/' . $url[0] . 'Controller.php')) {
             $this->controller = $url[0] . 'Controller';
             unset($url[0]);
+        } else {
+            Middleware::isLogin();
         }
 
         /* É instanciado o objeto do controller requerido */
         $this->controller = "App\\Controllers\\" . $this->controller;
-
         $this->controller = new $this->controller;
-        // print_r($this->controller);
-        // die;    
+
         if (isset($url[1]) && method_exists($this->controller, $url[1])) {
             $this->method = $url[1];
             unset($url[1]);
