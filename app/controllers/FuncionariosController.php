@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\Empresa;
 use App\Models\Funcionario;
+use Exception;
+use FPDF;
 
 class FuncionariosController extends Controller
 {
@@ -294,9 +296,46 @@ class FuncionariosController extends Controller
     }
 
 
-    public function exportarPdf(){
+    public function exportarpdf()
+    {
         $funcionarioModel = new Funcionario();
-        $funcionarios = $funcionarioModel->getAll();
-        
+        $funcionarios = $funcionarioModel->getAllFuncionarios();
+
+        if ($funcionarios) {
+
+            $pdf = new FPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', 'B', 12);
+
+            // Cabeçalho da tabela
+            $pdf->Cell(10, 10, 'ID', 1);
+            $pdf->Cell(40, 10, 'Nome', 1);
+            $pdf->Cell(30, 10, 'CPF', 1);
+            $pdf->Cell(30, 10, 'RG', 1);
+            $pdf->Cell(50, 10, 'Email', 1);
+            $pdf->Cell(30, 10, 'Empresa', 1);
+            $pdf->Ln();
+
+            $pdf->SetFont('Arial', '', 10);
+            foreach ($funcionarios as $funcionario) {
+                $pdf->Cell(10, 10, $funcionario['id_funcionario'], 1);
+                $pdf->Cell(40, 10, $funcionario['nome'], 1);
+                $pdf->Cell(30, 10, $funcionario['cpf'], 1);
+                $pdf->Cell(30, 10, $funcionario['rg'] ?? '-', 1);
+                $pdf->Cell(50, 10, $funcionario['email'], 1);
+                $pdf->Cell(30, 10, $funcionario['empresa'], 1);
+                $pdf->Ln();
+            }
+
+            /* Cabeçalhos para forçar o download */
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="funcionarios.pdf"');
+            header('Cache-Control: private, max-age=0, must-revalidate');
+            header('Pragma: public');
+
+            /* Gera e envia o PDF para download */
+            $pdf->Output('D', 'funcionarios.pdf');
+            exit;;
+        }
     }
 }

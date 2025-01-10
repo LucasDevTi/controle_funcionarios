@@ -96,8 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
             insertEmpresa();
         });
     }
-
-
 });
 
 function alertMsg(element, remove, add, msg) {
@@ -109,11 +107,6 @@ function alertMsg(element, remove, add, msg) {
     element.style.opacity = 1;
     element.classList.remove(remove);
     element.classList.add(add);
-
-    // setTimeout(() => {
-    //     element.style.transition = 'opacity 10s';
-    //     element.style.opacity = 0;
-    // }, 0);
 }
 
 function saveFuncionario() {
@@ -283,5 +276,32 @@ function insertEmpresa() {
 
 }
 
+function exportarPdf() {
+    let infoReturnFuncionario = document.querySelector('#info-return-funcionarios');
+
+    showLoading();
+    $.ajax({
+        url: '/controle_funcionarios/public/funcionarios/exportarpdf',
+        async: true,
+        method: 'GET',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (data, status, xhr) {
+            var blob = data;
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'funcionarios.pdf';  
+            link.click();  /* Inicia o download automaticamente */
+            hideLoading();
+
+        }, error: function (xhr, status, error) {
+            console.log(error);
+            alertMsg(infoReturnFuncionario, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
+            hideLoading();
+        }
+    });
+
+}
 
 

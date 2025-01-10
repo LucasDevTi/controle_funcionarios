@@ -37,12 +37,12 @@
                                 <p>Cad. Empresas</p>
                             </a>
                         </li>
-                        <li class="nav-item sair">
-                            <a href="/controle_funcionarios/public/sair" class="nav-link <?= $activePage === 'configuracoes' ? 'active' : '' ?>">
-                                <i class="nav-icon fas fa-cogs"></i>
+                        <!-- <li class="nav-item sair">
+                            <a href="#" onclick="exit(event)" class="nav-link <?= $activePage === 'configuracoes' ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-sign-out"></i>
                                 <p>Sair</p>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
             </div>

@@ -6,9 +6,10 @@
         <i class="fas fa-plus"></i> Cadastrar
     </a>
 
-    <a href="/controle_funcionarios/public/funcionarios/cadastrar" class="btn btn-primary btn-export btn-sm">
-        <i class="fas fa-plus"></i> Exportar
-    </a>
+    <button class="btn btn-primary btn-export btn-sm" onclick="exportarPdf()">
+        <i class="fas fa-upload"></i> Exportar
+    </button>
+
 
 </div>
 <table class="table table-striped table-hover">
@@ -36,7 +37,7 @@
                     <td><?php echo htmlspecialchars($funcionario['cpf']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['rg']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['email']); ?></td>
-                    <td><?php echo htmlspecialchars($funcionario['id_empresa']); ?></td>
+                    <td><?php echo htmlspecialchars($funcionario['id_empresa']); ?> - <?php echo htmlspecialchars($funcionario['empresa']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['data_cadastro']); ?></td>
                     <td>R$ <?php echo htmlspecialchars($funcionario['salario']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['bonificacao']); ?> %</td>

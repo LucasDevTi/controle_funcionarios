@@ -14,14 +14,14 @@ class Funcionario
         $this->db = Database::getInstance();
     }
 
-    public function getAllFuncionarios()
-    {
-        $stmt = $this->db->prepare("SELECT * FROM tbl_funcionario WHERE 1 ORDER BY id_funcionario DESC");
-        $stmt->execute([]);
-        return $stmt->fetchAll();
-    }
+    // public function getAllFuncionarios()
+    // {
+    //     $stmt = $this->db->prepare("SELECT * FROM tbl_funcionario WHERE 1 ORDER BY id_funcionario DESC");
+    //     $stmt->execute([]);
+    //     return $stmt->fetchAll();
+    // }
 
-    public function getAll()
+    public function getAllFuncionarios()
     {
         $sql = "
         SELECT 
@@ -30,6 +30,7 @@ class Funcionario
             f.cpf, 
             f.rg, 
             f.email, 
+            f.id_empresa,
             e.nome AS empresa, 
             f.data_cadastro, 
             f.salario, 
@@ -40,6 +41,7 @@ class Funcionario
             tbl_empresa AS e
         ON 
             f.id_empresa = e.id_empresa
+        ORDER BY id_funcionario DESC
     ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

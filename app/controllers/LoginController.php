@@ -24,10 +24,10 @@ class LoginController extends Controller
 
             if ($user) {
                 $_SESSION['user'] = $user;
-                
+
                 header('Location: /controle_funcionarios/public/home');
             } else {
-                
+
                 $this->view('login', ['error' => 'Credenciais inválidas.']);
             }
         }
