@@ -22,32 +22,15 @@
     </thead>
     <tbody>
         <?php if (!empty($funcionarios)) : ?>
-            <?php foreach ($funcionarios as $funcionario) :
-                $dataCadastro = $funcionario['data_cadastro'];
-                $dataAtual = new DateTime();
-                $dataCadastroObj = new DateTime($dataCadastro);
-                $diferenca = $dataCadastroObj->diff($dataAtual);
-                if ($diferenca->y >= 5) {
-                    $background = "#dc3545";
-                } else if ($diferenca->y >= 1) {
-                    $background = "#007bff";
-                } else {
-                    $background = "";
-                }
-            ?>
-                <tr style="background-color: <?php echo $background ?>;">
+            <?php foreach ($funcionarios as $funcionario) : ?>
+                <tr style="background-color: <?php echo $funcionario['background'] ?>;">
                     <td><?php echo htmlspecialchars($funcionario['id_funcionario']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['nome']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['cpf']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['rg']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['email']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['id_empresa']); ?></td>
-                    <td><?php
-                        $dataCadastro = $funcionario['data_cadastro'];
-                        $date = new DateTime($dataCadastro);
-                        echo $date->format('d/m/Y');
-                        ?>
-                    </td>
+                    <td><?php echo htmlspecialchars($funcionario['data_cadastro']); ?></td>
                     <td>R$ <?php echo htmlspecialchars($funcionario['salario']); ?></td>
                     <td><?php echo htmlspecialchars($funcionario['bonificacao']); ?> %</td>
 
