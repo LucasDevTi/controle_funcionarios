@@ -115,7 +115,7 @@ input[readonly] {
     background-color: #007bff;
 }
 
-.btn-export{
+.btn-export {
     margin-left: 5px;
 }
 
@@ -153,7 +153,8 @@ input[readonly] {
 }
 
 .info-return,
-#info-return-funcionarios {
+#info-return-funcionarios,
+#info-return-edit {
     padding: 10px;
     text-align: center;
     color: white;

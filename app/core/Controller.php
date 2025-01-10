@@ -18,6 +18,9 @@ class Controller
             // Captura o conteúdo da view específica
             ob_start();
             require_once $viewFile;
+            if ($view == 'login') {
+                exit;
+            }
             $content = ob_get_clean();
 
             // Inclui o template principal, passando o conteúdo da view

@@ -17,6 +17,23 @@ class FuncionariosController extends Controller
         $this->view('funcionarios/cadastrar', ['empresas' => $empresas]);
     }
 
+    public function editar($id)
+    {
+
+        $funcionarioModel = new Funcionario();
+        $funcionario = $funcionarioModel->getById($id);
+
+        if ($funcionario) {
+
+            $empresaModel = new Empresa;
+            $empresas = $empresaModel->getAllEmpresas();
+
+            $this->view('funcionarios/editar', ['funcionario' => $funcionario, 'empresas' => $empresas]);
+        } else {
+            $this->view('home');
+        }
+    }
+
     public function salvar()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -49,6 +66,15 @@ class FuncionariosController extends Controller
             ];
 
             $funcionarioModel = new Funcionario();
+
+            if (!$this->validarCPF($cpf_cad)) {
+                $data = array(
+                    'success' => false,
+                    'message' => "CPF inválido"
+                );
+                echo json_encode($data);
+                return;
+            }
 
             /* Válida se o funcionário já foi cadastrado pelo CPF*/
             $funcionario = $funcionarioModel->getByCpf($cpf_cad);
@@ -96,6 +122,98 @@ class FuncionariosController extends Controller
         }
     }
 
+    public function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $campos = ['nome_edit', 'email_edit', 'cpf_edit', 'empresa_edit', 'id'];
+
+            /* Verifica se existe algum campo vazio */
+            foreach ($campos as $campo) {
+                if (isset($_POST[$campo]) && !empty($_POST[$campo])) {
+                    /* Escapa string e salva na variável */
+                    $$campo = htmlspecialchars($_POST[$campo], ENT_QUOTES);
+                } else {
+
+                    $data = array(
+                        'success' => false,
+                        'message' => "Todos os campos devem ser preenchidos"
+                    );
+                    echo json_encode($data);
+                    return;
+                }
+            }
+
+            if (!$this->validarCPF($cpf_edit)) {
+                $data = array(
+                    'success' => false,
+                    'message' => "CPF inválido"
+                );
+                echo json_encode($data);
+                return;
+            }
+
+            $cpf_edit = preg_replace('/\D/', '', $cpf_edit);
+
+            $data = [
+                'nome' => $nome_edit,
+                'cpf' => $cpf_edit,
+                'email' => $email_edit,
+                'id_empresa' => $empresa_edit,
+            ];
+
+            $funcionarioModel = new Funcionario();
+
+            /* Válida se o funcionário já foi cadastrado pelo CPF*/
+            $funcionario = $funcionarioModel->getByCpf($cpf_edit);
+
+            if ($funcionario) {
+                if ($id != $funcionario['id_funcionario']) {
+                    $data = array(
+                        'success' => false,
+                        'message' => "Já existe um funcionário com esse CPF"
+                    );
+                    echo json_encode($data);
+                    return;
+                }
+            }
+
+            /* Válida se o funcionário já foi cadastrado pelo email*/
+            $funcionario = $funcionarioModel->getByEmail($email_edit);
+
+            if ($funcionario) {
+                if ($id != $funcionario['id_funcionario']) {
+                    $data = array(
+                        'success' => false,
+                        'message' => "Já existe um funcionário com esse email"
+                    );
+                    echo json_encode($data);
+                    return;
+                }
+            }
+
+            /* Cadastra o funcionário */
+            $result = $funcionarioModel->update($id, $data);
+
+            if ($result) {
+                $data = array(
+                    'success' => true,
+                    'message' => 'Alteração realizada com sucesso'
+                );
+                echo json_encode($data);
+                return;
+            }
+
+            $data = array(
+                'success' => false,
+                'message' => 'Houve um problema ao atualizar os dados do funcionário!'
+            );
+
+            echo json_encode($data);
+            return;
+        }
+    }
+
     public function excluir()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -134,22 +252,44 @@ class FuncionariosController extends Controller
             return;
         }
     }
-    // public function editar($id)
-    // {
-    //     // Buscar os dados do funcionário pelo ID (simulado aqui)
-    //     $funcionario = [
-    //         'id' => $id,
-    //         'nome' => 'João Silva',
-    //         'email' => 'joao@example.com',
-    //         'cargo' => 'Gerente'
-    //     ];
 
-    //     // Verificar se o funcionário foi encontrado
-    //     if (!$funcionario) {
-    //         die('Funcionário não encontrado.');
-    //     }
+    private function validarCPF($cpf)
+    {
 
-    //     // Chamar a view de edição com os dados do funcionário
-    //     $this->view('funcionarios/editar', ['funcionario' => $funcionario]);
-    // }
+        $cpf = preg_replace('/\D/', '', $cpf);
+
+        if (strlen($cpf) !== 11) {
+            return false;
+        }
+
+        if (preg_match('/^(\d)\1{10}$/', $cpf)) {
+            return false;
+        }
+
+        $soma = 0;
+        for ($i = 0; $i < 9; $i++) {
+            $soma += (int) $cpf[$i] * (10 - $i);
+        }
+        $resto = ($soma * 10) % 11;
+        if ($resto == 10 || $resto == 11) {
+            $resto = 0;
+        }
+        if ($resto != (int) $cpf[9]) {
+            return false;
+        }
+
+        $soma = 0;
+        for ($i = 0; $i < 10; $i++) {
+            $soma += (int) $cpf[$i] * (11 - $i);
+        }
+        $resto = ($soma * 10) % 11;
+        if ($resto == 10 || $resto == 11) {
+            $resto = 0;
+        }
+        if ($resto != (int) $cpf[10]) {
+            return false;
+        }
+
+        return true;
+    }
 }

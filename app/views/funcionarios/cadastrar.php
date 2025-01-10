@@ -9,7 +9,7 @@
     </div>
     <div class="form-group">
         <label for="cpf">CPF</label>
-        <input type="text" class="form-control" id="cpf" name="cpf_cad" maxlength="14" required>
+        <input type="text" class="form-control cpf" id="cpf" name="cpf_cad" maxlength="14" required>
         <br>
         <span id="cpf-error" class="error-message"></span>
 

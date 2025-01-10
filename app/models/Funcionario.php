@@ -44,6 +44,7 @@ class Funcionario
         $data_cadastro = date('Y-m-d H:i:s');
         $salario = 1500;
         $bonificacao = 0;
+        $rg = null;
 
         $sql = "INSERT INTO tbl_funcionario (nome, cpf, rg, email, id_empresa, data_cadastro, salario, bonificacao) VALUES (:nome, :cpf, :rg, :email, :id_empresa, :data_cadastro, :salario, :bonificacao)";
         $stmt = $this->db->prepare($sql);
@@ -72,6 +73,67 @@ class Funcionario
 
         if ($stmt->execute()) {
             return $stmt->rowCount() > 0;
+        }
+
+        return false;
+    }
+
+    public function getById($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM tbl_funcionario WHERE id_funcionario = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    public function update($id, $data)
+    {
+        if (!$id) {
+            return false;
+        }
+
+        $fields = [];
+        if (!empty($data['nome'])) {
+            $fields[] = "nome = :nome";
+        }
+        if (!empty($data['cpf'])) {
+            $fields[] = "cpf = :cpf";
+        }
+        if (!empty($data['email'])) {
+            $fields[] = "email = :email";
+        }
+        if (!empty($data['id_empresa'])) {
+            $fields[] = "id_empresa = :id_empresa";
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $sql = "UPDATE tbl_funcionario SET " . implode(', ', $fields) . " WHERE id_funcionario = :id";
+        $stmt = $this->db->prepare($sql);
+
+        if (!empty($data['nome'])) {
+            $stmt->bindParam(':nome', $data['nome']);
+        }
+        if (!empty($data['cpf'])) {
+            $stmt->bindParam(':cpf', $data['cpf']);
+        }
+
+        if (!empty($data['email'])) {
+            $stmt->bindParam(':email', $data['email']);
+        }
+        if (!empty($data['id_empresa'])) {
+            $stmt->bindParam(':id_empresa', $data['id_empresa']);
+        }
+
+        $stmt->bindParam(':id', $id);
+
+        if ($stmt->execute()) {
+            if ($stmt->rowCount() > 0) {
+                return true; 
+            } else {
+                return false;
+            }
         }
 
         return false;

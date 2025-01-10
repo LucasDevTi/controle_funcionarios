@@ -8,10 +8,10 @@ function hideLoading() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const cpfInput = document.getElementById('cpf');
-    const mensagemDiv = document.getElementById('mensagem');
-    const formCadastrar = document.getElementById('formCadastrar');
+    const cpfInput = document.querySelector('.cpf');
     const cpfError = document.getElementById('cpf-error');
+    const formCadastroFuncionario = document.getElementById('formCadastroFuncionario');
+    const formEdicaoFuncionario = document.getElementById('formEdicaoFuncionario');
 
     // Máscara CPF
     cpfInput.addEventListener('input', function () {
@@ -57,34 +57,53 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    document.getElementById('formCadastroFuncionario').addEventListener('submit', function (event) {
-        const cpfValue = cpfInput.value;
-        event.preventDefault();
+    if (formCadastroFuncionario) {
 
-        saveFuncionario();
+        document.getElementById('formCadastroFuncionario').addEventListener('submit', function (event) {
+            const cpfValue = cpfInput.value;
+            event.preventDefault();
 
-        if (!validarCPF(cpfValue)) {
-            cpfError.textContent = "CPF inválido!";
-        } else {
-            cpfError.textContent = "";
-        }
-    });
+            saveFuncionario();
 
+            if (!validarCPF(cpfValue)) {
+                cpfError.textContent = "CPF inválido!";
+            } else {
+                cpfError.textContent = "";
+            }
+        });
+    }
+
+
+    if (formEdicaoFuncionario) {
+        document.getElementById('formEdicaoFuncionario').addEventListener('submit', function (event) {
+            const cpfValue = cpfInput.value;
+            event.preventDefault();
+            updateFuncionario();
+
+            if (!validarCPF(cpfValue)) {
+                cpfError.textContent = "CPF inválido!";
+            } else {
+                cpfError.textContent = "";
+            }
+        });
+    }
 
 });
+
 function alertMsg(element, remove, add, msg) {
 
     element.textContent = '';
     element.textContent = msg;
 
     element.style.display = 'block';
+    element.style.opacity = 1;
     element.classList.remove(remove);
     element.classList.add(add);
 
-    setTimeout(() => {
-        element.style.transition = 'opacity 10s';
-        element.style.opacity = 0;
-    }, 0);
+    // setTimeout(() => {
+    //     element.style.transition = 'opacity 10s';
+    //     element.style.opacity = 0;
+    // }, 0);
 }
 
 function saveFuncionario() {
@@ -125,6 +144,50 @@ function saveFuncionario() {
             }
         }, error: function () {
             alertMsg(infoReturn, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
+            hideLoading();
+        }
+    });
+
+}
+
+function updateFuncionario() {
+
+    var nome = document.getElementById('nome_edit').value;
+    var email = document.getElementById('email_edit').value;
+    var cpf = document.getElementById('cpf_edit').value;
+    const select = document.getElementById('empresa_edit');
+    var id_empresa = select.value;
+    let infoReturnEdit = document.querySelector('#info-return-edit');
+    let id_funcionario = document.getElementById('id_funcionario').value;
+
+    if (nome == "" || cpf == "" || email == "" || id_empresa == "") {
+        alertMsg(infoReturnEdit, 'red', 'green', "Todos os dados precisam ser preenchidos");
+        return;
+    }
+    showLoading();
+    $.ajax({
+        url: '/controle_funcionarios/public/funcionarios/update',
+        type: 'POST',
+        async: true,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            nome_edit: nome,
+            cpf_edit: cpf,
+            email_edit: email,
+            empresa_edit: id_empresa,
+            id: id_funcionario
+        },
+        success: function (response) {
+            if (response.success) {
+                alertMsg(infoReturnEdit, 'red', 'green', response.message);
+                hideLoading();
+            } else {
+                alertMsg(infoReturnEdit, 'green', 'red', response.message);
+                hideLoading();
+            }
+        }, error: function () {
+            alertMsg(infoReturnEdit, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
             hideLoading();
         }
     });
@@ -172,4 +235,6 @@ function excluir(event, id) {
         });
     }
 }
+
+
 
