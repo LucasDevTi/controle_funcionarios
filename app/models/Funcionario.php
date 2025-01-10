@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use PDO;
 
 class Funcionario
 {
@@ -58,6 +59,19 @@ class Funcionario
 
         if ($stmt->execute()) {
             return true;
+        }
+
+        return false;
+    }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM tbl_funcionario WHERE id_funcionario = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return $stmt->rowCount() > 0;
         }
 
         return false;

@@ -70,63 +70,106 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function alertMsg(element, remove, add, msg) {
 
-        element.textContent = '';
-        element.textContent = msg;
+});
+function alertMsg(element, remove, add, msg) {
 
-        element.style.display = 'block';
-        element.classList.remove(remove);
-        element.classList.add(add);
+    element.textContent = '';
+    element.textContent = msg;
 
-        setTimeout(() => {
-            element.style.transition = 'opacity 10s';
-            element.style.opacity = 0;
-        }, 0);
+    element.style.display = 'block';
+    element.classList.remove(remove);
+    element.classList.add(add);
+
+    setTimeout(() => {
+        element.style.transition = 'opacity 10s';
+        element.style.opacity = 0;
+    }, 0);
+}
+
+function saveFuncionario() {
+
+    var nome = document.getElementById('nome').value;
+    var email = document.getElementById('email').value;
+    var cpf = document.getElementById('cpf').value;
+    const select = document.getElementById('empresa');
+    var id_empresa = select.value;
+    let infoReturn = document.querySelector('.info-return');
+
+    if (nome == "" || cpf == "" || email == "" || id_empresa == "") {
+        alertMsg(infoReturn, 'red', 'green', "Todos os dados precisam ser preenchidos");
+        return;
+    }
+    showLoading();
+    $.ajax({
+        url: '/controle_funcionarios/public/funcionarios/salvar',
+        type: 'POST',
+        async: true,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            nome_cad: nome,
+            cpf_cad: cpf,
+            email_cad: email,
+            empresa_cad: id_empresa
+        },
+        success: function (response) {
+            console.log(response.success)
+            if (response.success) {
+                alertMsg(infoReturn, 'red', 'green', response.message);
+                hideLoading();
+            } else {
+                console.log(response);
+                alertMsg(infoReturn, 'green', 'red', response.message);
+                hideLoading();
+            }
+        }, error: function () {
+            alertMsg(infoReturn, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
+            hideLoading();
+        }
+    });
+
+}
+
+function excluir(event, id) {
+
+    event.preventDefault();
+
+    let infoReturnFuncionario = document.querySelector('#info-return-funcionarios');
+
+    if (id == "") {
+        alertMsg(infoReturnFuncionario, 'red', 'green', "Houve um erro inesperado, por favor recarregue a página e tente novamente!");
+        return;
     }
 
-    function saveFuncionario() {
-
-        var nome = document.getElementById('nome').value;
-        var email = document.getElementById('email').value;
-        var cpf = document.getElementById('cpf').value;
-        const select = document.getElementById('empresa');
-        var id_empresa = select.value;
-        let infoReturn = document.querySelector('.info-return');
-
-        if (nome == "" || cpf == "" || email == "" || id_empresa == "") {
-            alertMsg(infoReturn, 'red', 'green', "Todos os dados precisam ser preenchidos");
-            return;
-        }
+    if (confirm("Tem certeza que deseja excluir esse funcionário?")) {
         showLoading();
         $.ajax({
-            url: '/controle_funcionarios/public/funcionarios/salvar',
+            url: '/controle_funcionarios/public/funcionarios/excluir',
             type: 'POST',
             async: true,
             method: 'POST',
             dataType: 'json',
             data: {
-                nome_cad: nome,
-                cpf_cad: cpf,
-                email_cad: email,
-                empresa_cad: id_empresa
+                id: id,
             },
             success: function (response) {
                 console.log(response.success)
                 if (response.success) {
-                    alertMsg(infoReturn, 'red', 'green', response.message);
+                    alertMsg(infoReturnFuncionario, 'red', 'green', response.message);
                     hideLoading();
+                    alert("Funcionário excluido com sucesso");
+                    location.reload();
                 } else {
                     console.log(response);
-                    alertMsg(infoReturn, 'green', 'red', response.message);
+                    alertMsg(infoReturnFuncionario, 'green', 'red', response.message);
                     hideLoading();
                 }
             }, error: function () {
-                alertMsg(infoReturn, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
+                alertMsg(infoReturnFuncionario, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
                 hideLoading();
             }
         });
-
     }
+}
 
-});

@@ -1,8 +1,15 @@
 <h2>Lista de Funcionários</h2>
+<p id="info-return-funcionarios"></p>
+
 <div class="block-btn">
     <a href="/controle_funcionarios/public/funcionarios/cadastrar" class="btn btn-success btn-sm">
         <i class="fas fa-plus"></i> Cadastrar
     </a>
+
+    <a href="/controle_funcionarios/public/funcionarios/cadastrar" class="btn btn-primary btn-export btn-sm">
+        <i class="fas fa-plus"></i> Exportar
+    </a>
+
 </div>
 <table class="table table-striped table-hover">
     <thead class="thead-dark">
@@ -40,8 +47,8 @@
                         </a>
                     </td>
                     <td>
-                        <form action="/controle_funcionarios/public/funcionarios/excluir/<?php echo $funcionario['id_funcionario']; ?>" method="POST" style="display:inline-block;">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este funcionário?');">
+                        <form style="display:inline-block;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="excluir(event, '<?php echo $funcionario['id_funcionario'] ?>')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>

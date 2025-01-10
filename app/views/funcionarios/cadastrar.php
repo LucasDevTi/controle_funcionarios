@@ -1,6 +1,6 @@
 <h2>Cadastrar Funcionário</h2>
 
-<p class="info-return">successo</p>
+<p class="info-return"></p>
 
 <form id="formCadastroFuncionario" action="/controle_funcionarios/public/funcionarios/salvar" method="POST">
     <div class="form-group">

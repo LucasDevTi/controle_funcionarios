@@ -111,6 +111,14 @@ input[readonly] {
     margin-top: 10px;
 }
 
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-export{
+    margin-left: 5px;
+}
+
 .btn-secondary:hover {
     background-color: #e53935;
 }
@@ -144,7 +152,8 @@ input[readonly] {
     color: red;
 }
 
-.info-return {
+.info-return,
+#info-return-funcionarios {
     padding: 10px;
     text-align: center;
     color: white;

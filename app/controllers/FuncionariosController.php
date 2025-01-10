@@ -95,6 +95,45 @@ class FuncionariosController extends Controller
             return;
         }
     }
+
+    public function excluir()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                /* Escapa string e salva na variável */
+                $id = htmlspecialchars($_POST['id'], ENT_QUOTES);
+            } else {
+                $data = array(
+                    'success' => false,
+                    'message' => "Não foi possivel excluir o funcionário"
+                );
+                echo json_encode($data);
+                return;
+            }
+
+            $funcionarioModel = new Funcionario();
+
+            $result = $funcionarioModel->delete($id);
+
+            if ($result) {
+                $data = array(
+                    'success' => true,
+                    'message' => 'Funcionário excluido com sucesso'
+                );
+                echo json_encode($data);
+                return;
+            }
+
+            $data = array(
+                'success' => false,
+                'message' => 'Houve um problema ao excluir o funcionário!'
+            );
+
+            echo json_encode($data);
+            return;
+        }
+    }
     // public function editar($id)
     // {
     //     // Buscar os dados do funcionário pelo ID (simulado aqui)
