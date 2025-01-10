@@ -12,20 +12,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const cpfError = document.getElementById('cpf-error');
     const formCadastroFuncionario = document.getElementById('formCadastroFuncionario');
     const formEdicaoFuncionario = document.getElementById('formEdicaoFuncionario');
+    const formCadastroEmpresa = document.getElementById('formCadastroEmpresa');
+
 
     // Máscara CPF
-    cpfInput.addEventListener('input', function () {
-        let cpf = cpfInput.value.replace(/\D/g, '');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function () {
+            let cpf = cpfInput.value.replace(/\D/g, '');
 
-        if (cpf.length > 11) cpf = cpf.substring(0, 11);
+            if (cpf.length > 11) cpf = cpf.substring(0, 11);
 
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 
-        cpfInput.value = cpf;
-    });
-
+            cpfInput.value = cpf;
+        });
+    }
 
     function validarCPF(cpf) {
         cpf = cpf.replace(/\D/g, '');
@@ -73,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     if (formEdicaoFuncionario) {
         document.getElementById('formEdicaoFuncionario').addEventListener('submit', function (event) {
             const cpfValue = cpfInput.value;
@@ -87,6 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    if (formCadastroEmpresa) {
+        document.getElementById('formCadastroEmpresa').addEventListener('submit', function (event) {
+            event.preventDefault();
+            insertEmpresa();
+        });
+    }
+
 
 });
 
@@ -234,6 +244,43 @@ function excluir(event, id) {
             }
         });
     }
+}
+
+function insertEmpresa() {
+
+    var nome = document.getElementById('nome_empresa').value;
+    let infoReturnEmpresa = document.querySelector('#info-return-empresa');
+
+    if (nome == "") {
+        alertMsg(infoReturn, 'red', 'green', "Por favor preencha o nome da empresa");
+        return;
+    }
+    showLoading();
+    $.ajax({
+        url: '/controle_funcionarios/public/empresas/insert',
+        type: 'POST',
+        async: true,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            nome: nome,
+        },
+        success: function (response) {
+            console.log(response.success)
+            if (response.success) {
+                alertMsg(infoReturnEmpresa, 'red', 'green', response.message);
+                hideLoading();
+            } else {
+                console.log(response);
+                alertMsg(infoReturnEmpresa, 'green', 'red', response.message);
+                hideLoading();
+            }
+        }, error: function () {
+            alertMsg(infoReturnEmpresa, 'green', 'red', "Houve um erro inesperado! Por favor tente novamente.");
+            hideLoading();
+        }
+    });
+
 }
 
 

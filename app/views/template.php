@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Menu Lateral -->
@@ -26,20 +27,20 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
                             <a href="/controle_funcionarios/public/home" class="nav-link <?= $activePage === 'home' ? 'active' : '' ?>">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/controle_funcionarios/public/usuarios" class="nav-link <?= $activePage === 'usuarios' ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-users"></i>
-                                <p>Usuários</p>
+                                <p>Funcionários</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/controle_funcionarios/public/configuracoes" class="nav-link <?= $activePage === 'configuracoes' ? 'active' : '' ?>">
+                            <a href="/controle_funcionarios/public/empresas/cadastro" class="nav-link <?= $activePage === 'empresas' ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Cad. Empresas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item sair">
+                            <a href="/controle_funcionarios/public/sair" class="nav-link <?= $activePage === 'configuracoes' ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-cogs"></i>
-                                <p>Configurações</p>
+                                <p>Sair</p>
                             </a>
                         </li>
                     </ul>
@@ -61,7 +62,7 @@
         <div class="loading-spinner"></div>
     </div>
 
-    
+
 </body>
 
 </html>

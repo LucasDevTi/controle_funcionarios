@@ -21,6 +21,31 @@ class Funcionario
         return $stmt->fetchAll();
     }
 
+    public function getAll()
+    {
+        $sql = "
+        SELECT 
+            f.id_funcionario, 
+            f.nome, 
+            f.cpf, 
+            f.rg, 
+            f.email, 
+            e.nome AS empresa, 
+            f.data_cadastro, 
+            f.salario, 
+            f.bonificacao 
+        FROM 
+            tbl_funcionario AS f
+        INNER JOIN 
+            tbl_empresa AS e
+        ON 
+            f.id_empresa = e.id_empresa
+    ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function getByCpf($cpf)
     {
         $stmt = $this->db->prepare("SELECT * FROM tbl_funcionario WHERE cpf = ?");
@@ -130,7 +155,7 @@ class Funcionario
 
         if ($stmt->execute()) {
             if ($stmt->rowCount() > 0) {
-                return true; 
+                return true;
             } else {
                 return false;
             }

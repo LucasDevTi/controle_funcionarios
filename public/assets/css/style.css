@@ -154,7 +154,8 @@ input[readonly] {
 
 .info-return,
 #info-return-funcionarios,
-#info-return-edit {
+#info-return-edit,
+#info-return-empresa {
     padding: 10px;
     text-align: center;
     color: white;

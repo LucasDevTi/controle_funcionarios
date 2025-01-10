@@ -32,6 +32,7 @@ class HomeController extends Controller
             $date = new DateTime($dataCadastro);
             $funcionarios[$index]['data_cadastro'] = $date->format('d/m/Y');
 
+            $funcionarios[$index]['salario'] = $funcionarios[$index]['salario'] + (($funcionarios[$index]['salario'] * $funcionarios[$index]['bonificacao']) / 100);
             /* Formatano para Real */
             $funcionarios[$index]['salario'] = number_format($funcionarios[$index]['salario'], 2, ',', '.');
         }

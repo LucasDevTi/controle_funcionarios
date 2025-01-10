@@ -292,4 +292,11 @@ class FuncionariosController extends Controller
 
         return true;
     }
+
+
+    public function exportarPdf(){
+        $funcionarioModel = new Funcionario();
+        $funcionarios = $funcionarioModel->getAll();
+        
+    }
 }
